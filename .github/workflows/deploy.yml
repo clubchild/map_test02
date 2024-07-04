@@ -11,17 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        
       - name: Setup Basic Auth
         run: |
           echo "${{ secrets.BASIC_AUTH_USER }}:$(openssl passwd -apr1 ${{ secrets.BASIC_AUTH_PASS }})" > .htpasswd
@@ -29,10 +18,10 @@ jobs:
           AuthName \"Restricted Access\"
           AuthUserFile /path/to/.htpasswd
           Require valid-user" > .htaccess
-    
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: .
           enable_jekyll: false
