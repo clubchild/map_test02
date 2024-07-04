@@ -21,7 +21,15 @@ jobs:
 
       - name: Build
         run: npm run build
-
+        
+      - name: Setup Basic Auth
+        run: |
+          echo "${{ secrets.BASIC_AUTH_USER }}:$(openssl passwd -apr1 ${{ secrets.BASIC_AUTH_PASS }})" > .htpasswd
+          echo "AuthType Basic
+          AuthName \"Restricted Access\"
+          AuthUserFile /path/to/.htpasswd
+          Require valid-user" > .htaccess
+    
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
